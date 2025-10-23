@@ -1,6 +1,6 @@
-const marcas = document.getElementById('marcas');
+const marcasSelect = document.getElementById('marcas');
 const selectContainer = document.getElementById('select-container');
-const modelos = document.getElementById('modelos');
+const modelosSelect = document.getElementById('modelos');
 
 fetch('http://localhost:8888/marcas')
     .then(response => response.text())
@@ -8,7 +8,7 @@ fetch('http://localhost:8888/marcas')
         const marcas = data.split('\n')
         marcas.forEach(marca => {
             const option = document.createElement('option')
-            option.vaue = marca
+            option.value = marca
             option.textContent = marca
             marcasSelect.appendChild(option)
         })
@@ -19,27 +19,27 @@ fetch('http://localhost:8888/marcas')
         })
     })
 
-    function cargarModelos(marca) {
-        fetch(`http://localhost:8888/modelos/${marca}`)
-            .then(response => response.tect())
-            .then(data => {
-                const modelos = data.split('\n')
-                modelosSelect.innerHTML = '<option value="">Seleccione un modelo</option>'
-                modelos.forEach(modelo => {
-                    const option = document.createElement('option')
-                    option.value = modelo
-                    option.textContent = modelo
-
-                    option.classList.add(`is-${marca}`)
-                    modelosSelect.appendChild(option)
-                })
+function cargarModelos(marca) {
+    fetch(`http://localhost:8888/modelos/${marca}`)
+        .then(response => response.text())
+        .then(data => {
+            const modelos = data.split('\n')
+            modelosSelect.innerHTML = '<option value="">Seleccione un modelo</option>'
+            modelos.forEach(modelo => {
+                const option = document.createElement('option')
+                option.value = modelo
+                option.textContent = modelo
+                const marcaSinEspacios = marca.trim();
+                option.classList.add(`is-${marcaSinEspacios}`)
+                modelosSelect.appendChild(option)
             })
+        })
+}
+
+modelosSelect.addEventListener('change', () => {
+    const modelo = modelosSelect.value
+
+    if (modelo) {
+        alert(`Modelo seleccionado: ${modelo}`)
     }
-
-    modelosSelect.addEventListener('change', () => {
-        const modelo = modelosSelect.value
-
-        if(modelo) {
-            alert(`Modelo seleccionado: ${modelo}`)
-        }
-    })
+})
